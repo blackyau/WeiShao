@@ -15,7 +15,7 @@ def check(stu_code):
                       'like Gecko) Version/4.0 Chrome/78.0.3904.108 Mobile Safari/537.36 weishao(6.7.4.72570) wsi18n('
                       'zh)',
         'X-Requested-With': 'com.ruijie.whistle', 'Referer': 'http://ncp.suse.edu.cn/questionnaire/my'}
-    r = requests.get(url, params=payload, headers=headers)
+    r = requests.get(url, params=payload, headers=headers, timeout=3)
     if r.ok:
         sing_time = r.json()['data'][0]['createtime']  # 获取最近提交问卷的时间
         now_time = datetime.today().strftime('%Y-%m-%d')  # 获取当前时间
@@ -36,7 +36,7 @@ def user_info(stu_code, password):
                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                              'Chrome/86.0.4240.75 Safari/537.36', 'Content-Type': 'application/json'}
     post_data = json.dumps(post_data_raw)  # 这网站必须要先用json.dumps()转换一下，不然验证会失败
-    r = requests.post('http://web.weishao.com.cn/api/login', headers=headers, data=post_data)
+    r = requests.post('http://web.weishao.com.cn/api/login', headers=headers, data=post_data, timeout=3)
     result = r.json()
     if not r.ok:
         print('登录失败详细信息:', r.text, end='')
@@ -85,7 +85,7 @@ def fuck_weishao(stu_code, password):
                       'zh)',
         'Content-Type': 'application/json'}
     r = requests.post('http://ncp.suse.edu.cn/api/questionnaire/questionnaire/addMyAnswer', headers=headers,
-                      data=json.dumps(answer_data))
+                      data=json.dumps(answer_data), timeout=3)
     if not r.ok:
         print('打卡失败,错误信息如下:', r.text, end='')
         return None
