@@ -116,7 +116,7 @@ if __name__ == '__main__':
             reader = csv.reader(fp)
             all_user_info = {rows[0]: (rows[1], rows[2]) for rows in reader}
     except FileExistsError:
-        print("userinfo.csv 数据问卷不存在,请手动创建并按格式写入用户数据")
+        print("userinfo.csv 数据文件不存在,请手动创建并按格式写入用户数据")
         exit(1)
     for i in all_user_info.keys():
         if check(i):
