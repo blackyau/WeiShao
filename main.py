@@ -4,6 +4,7 @@ from datetime import datetime
 import config
 import json
 from random import uniform
+from sys import exit
 
 
 def check(stu_code):
@@ -103,15 +104,20 @@ def fuck_weishao(stu_code, password):
 
 # TODO 把user_info和除体温信息外的数据，持久化到本地
 if __name__ == '__main__':
-    with open('Data.json', mode='r', encoding='gbk') as Data_FILE:
-        filestr = Data_FILE.read()
-        if filestr is not "":
-            DATA = json.loads(filestr)
-        else:
-            DATA = {}  # 解决第一次运行时,如果这个变量没有被初始化,那么前面登录的代码就会出的问题
-    with open('userinfo.csv', mode='r', encoding='gbk') as fp:
-        reader = csv.reader(fp)
-        all_user_info = {rows[0]: (rows[1], rows[2]) for rows in reader}
+    try:
+        with open('Data.json', mode='r', encoding='gbk') as Data_FILE:
+            filestr = Data_FILE.read()
+            if filestr is not "":
+                DATA = json.loads(filestr)
+    except FileNotFoundError:
+                DATA = {}  # 解决第一次运行时,如果这个变量没有被初始化,那么前面登录的代码就会出的问题
+    try:
+        with open('userinfo.csv', mode='r', encoding='gbk') as fp:
+            reader = csv.reader(fp)
+            all_user_info = {rows[0]: (rows[1], rows[2]) for rows in reader}
+    except FileExistsError:
+        print("userinfo.csv 数据问卷不存在,请手动创建并按格式写入用户数据")
+        exit(1)
     for i in all_user_info.keys():
         if check(i):
             print(all_user_info[i][0], '已打卡')
