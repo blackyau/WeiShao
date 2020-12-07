@@ -36,7 +36,7 @@ def user_info(stu_code, password):
                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                              'Chrome/86.0.4240.75 Safari/537.36', 'Content-Type': 'application/json'}
     post_data = json.dumps(post_data_raw)  # 这网站必须要先用json.dumps()转换一下，不然验证会失败
-    r = requests.post('http://web.weishao.com.cn/api/login', headers=headers, data=post_data, timeout=3)
+    r = requests.post('http://web.weishao.com.cn/api/login', headers=headers, data=post_data, timeout=10)
     result = r.json()
     if not r.ok:
         print('登录失败详细信息:', r.text, end='')
@@ -46,8 +46,22 @@ def user_info(stu_code, password):
 
 # 学号, 密码
 def fuck_weishao(stu_code, password):
+    headers = {
+        'Referer': 'http://ncp.suse.edu.cn/questionnaire/addanswer?page_from=onpublic&activityid=82&can_repeat=1',
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; LIO-AN00 Build/HUAWEILIO-AN00; wv) AppleWebKit/537.36 (KHTML, '
+                      'like Gecko) Version/4.0 Chrome/78.0.3904.108 Mobile Safari/537.36 weishao(6.7.4.72570) wsi18n('
+                      'zh)',
+        'Content-Type': 'application/json'}
     if stu_code is None or password is None:
         return False
+    if stu_code in DATA:  # 有缓存的数据
+        r = requests.post('http://ncp.suse.edu.cn/api/questionnaire/questionnaire/addMyAnswer', headers=headers,
+                          data=json.dumps(DATA[stu_code]), timeout=10)
+        if not r.ok:
+            print('打卡失败,错误信息如下:', r.text, end='')
+            return None
+        else:
+            return r.json()
     answer_data = json.loads(json.dumps(config.Answer))
     totalArr_data = json.loads(json.dumps(config.TotalArr))
     userinfo = user_info(stu_code, password)
@@ -77,24 +91,24 @@ def fuck_weishao(stu_code, password):
         if i['answered']:
             question_data.append(i)
     answer_data['question_data'] = question_data
-
-    headers = {
-        'Referer': 'http://ncp.suse.edu.cn/questionnaire/addanswer?page_from=onpublic&activityid=82&can_repeat=1',
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; LIO-AN00 Build/HUAWEILIO-AN00; wv) AppleWebKit/537.36 (KHTML, '
-                      'like Gecko) Version/4.0 Chrome/78.0.3904.108 Mobile Safari/537.36 weishao(6.7.4.72570) wsi18n('
-                      'zh)',
-        'Content-Type': 'application/json'}
     r = requests.post('http://ncp.suse.edu.cn/api/questionnaire/questionnaire/addMyAnswer', headers=headers,
-                      data=json.dumps(answer_data), timeout=3)
+                      data=json.dumps(answer_data), timeout=10)
     if not r.ok:
         print('打卡失败,错误信息如下:', r.text, end='')
         return None
     else:
+        DATA[stu_code] = answer_data
         return r.json()
 
 
 # TODO 把user_info和除体温信息外的数据，持久化到本地
 if __name__ == '__main__':
+    with open('Data.json', mode='r', encoding='gbk') as Data_FILE:
+        filestr = Data_FILE.read()
+        if filestr is not "":
+            DATA = json.loads(filestr)
+        else:
+            DATA = {}  # 解决第一次运行时,如果这个变量没有被初始化,那么前面登录的代码就会出的问题
     with open('userinfo.csv', mode='r', encoding='gbk') as fp:
         reader = csv.reader(fp)
         all_user_info = {rows[0]: (rows[1], rows[2]) for rows in reader}
@@ -104,3 +118,5 @@ if __name__ == '__main__':
         else:
             print(all_user_info[i][0], i, all_user_info[i][1], '打卡结果: ', end='')
             print(fuck_weishao(i, all_user_info[i][1]))
+    with open('Data.json', mode='w', encoding='gbk') as Data_FILE:
+        Data_FILE.write(json.dumps(DATA, indent=2, ensure_ascii=False))
