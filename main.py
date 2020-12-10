@@ -82,7 +82,7 @@ def fuck_weishao(stu_code, password):
     answer_data['organization'] = org
 
     # 随机生成体温
-    for i in range(13, 17):
+    for i in range(6, 9):
         totalArr_data[i]['content'] = round(uniform(36.2, 36.9), 1)
     answer_data['totalArr'] = totalArr_data
 
