@@ -107,7 +107,7 @@ if __name__ == '__main__':
     try:
         with open('Data.json', mode='r', encoding='gbk') as Data_FILE:
             filestr = Data_FILE.read()
-            if filestr is not "":
+            if filestr != "":
                 DATA = json.loads(filestr)
     except FileNotFoundError:
                 DATA = {}  # 解决第一次运行时,如果这个变量没有被初始化,那么前面登录的代码就会出的问题
