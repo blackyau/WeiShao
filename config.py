@@ -151,12 +151,13 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": "",
             "answerid": 0,
+            "hide": True,
             "answered": False
         },
         {
             "questionid": 1235,
-            "optionid": "1906",
-            "optiontitle": "未接触过",
+            "optionid": 0,
+            "optiontitle": 0,
             "question_sort": 0,
             "question_type": 1,
             "option_sort": 0,
@@ -164,9 +165,9 @@ TotalArr = [
             "content": "",
             "isotheroption": 0,
             "otheroption_content": "",
-            "isanswered": True,
             "answerid": 0,
-            "answered": True
+            "hide": True,
+            "answered": False
         },
         {
             "questionid": 1236,
@@ -181,6 +182,7 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": True,
             "answerid": 0,
+            "hide": False,
             "answered": True
         },
         {
@@ -196,6 +198,7 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": True,
             "answerid": 0,
+            "hide": False,
             "answered": True
         },
         {
@@ -211,6 +214,7 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": True,
             "answerid": 0,
+            "hide": False,
             "answered": True
         },
         {
@@ -226,6 +230,7 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": True,
             "answerid": 0,
+            "hide": False,
             "answered": True
         },
         {
@@ -241,6 +246,7 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": True,
             "answerid": 0,
+            "hide": False,
             "answered": True
         },
         {
@@ -256,6 +262,7 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": True,
             "answerid": 0,
+            "hide": False,
             "answered": True
         }
     ]
