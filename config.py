@@ -151,13 +151,12 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": "",
             "answerid": 0,
-            "hide": True,
             "answered": False
         },
         {
             "questionid": 1235,
-            "optionid": 0,
-            "optiontitle": 0,
+            "optionid": "1906",
+            "optiontitle": "未接触过",
             "question_sort": 0,
             "question_type": 1,
             "option_sort": 0,
@@ -165,10 +164,9 @@ TotalArr = [
             "content": "",
             "isotheroption": 0,
             "otheroption_content": "",
-            "isanswered": "",
+            "isanswered": True,
             "answerid": 0,
-            "hide": True,
-            "answered": False
+            "answered": True
         },
         {
             "questionid": 1236,
@@ -183,12 +181,11 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": True,
             "answerid": 0,
-            "hide": False,
             "answered": True
         },
         {
             "questionid": 1237,
-            "optionid": 1913,
+            "optionid": "1913",
             "optiontitle": "否，身体健康",
             "question_sort": 0,
             "question_type": 1,
@@ -199,7 +196,6 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": True,
             "answerid": 0,
-            "hide": False,
             "answered": True
         },
         {
@@ -215,7 +211,6 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": True,
             "answerid": 0,
-            "hide": False,
             "answered": True
         },
         {
@@ -231,7 +226,6 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": True,
             "answerid": 0,
-            "hide": False,
             "answered": True
         },
         {
@@ -247,7 +241,6 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": True,
             "answerid": 0,
-            "hide": False,
             "answered": True
         },
         {
@@ -263,7 +256,6 @@ TotalArr = [
             "otheroption_content": "",
             "isanswered": True,
             "answerid": 0,
-            "hide": False,
             "answered": True
         }
     ]
