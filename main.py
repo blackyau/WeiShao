@@ -2,6 +2,7 @@ import csv
 import requests
 from datetime import datetime
 import config
+import config_out
 import json
 from random import uniform
 from sys import exit
@@ -46,7 +47,7 @@ def user_info(stu_code, password):
 
 
 # 学号, 密码
-def fuck_weishao(stu_code, password):
+def fuck_weishao(stu_code, password, add=None):
     headers = {
         'Referer': 'http://ncp.suse.edu.cn/questionnaire/addanswer?page_from=onpublic&activityid=82&can_repeat=1',
         'User-Agent': 'Mozilla/5.0 (Linux; Android 10; LIO-AN00 Build/HUAWEILIO-AN00; wv) AppleWebKit/537.36 (KHTML, '
@@ -55,7 +56,7 @@ def fuck_weishao(stu_code, password):
         'Content-Type': 'application/json'}
     if stu_code is None or password is None:
         return False
-    if stu_code in DATA:  # 有缓存的数据
+    if stu_code in DATA and add is None:  # 有缓存的数据，同时地址为空（也就是未在校）
         r = requests.post('http://ncp.suse.edu.cn/api/questionnaire/questionnaire/addMyAnswer', headers=headers,
                           data=json.dumps(DATA[stu_code]), timeout=10)
         if not r.ok:
@@ -64,7 +65,11 @@ def fuck_weishao(stu_code, password):
         else:
             return r.json()
     answer_data = json.loads(json.dumps(config.Answer))
-    totalArr_data = json.loads(json.dumps(config.TotalArr))
+    if add is None:  # 如果是在校（地址为空）就去读取在校的配置
+        totalArr_data = json.loads(json.dumps(config.TotalArr))
+    else:  # 读取未在校的配置
+        totalArr_data = json.loads(json.dumps(config_out.TotalArr))
+        totalArr_data[1]['content'] = add  # 把地址写入
     userinfo = user_info(stu_code, password)
     if userinfo is None:
         return ''
@@ -84,9 +89,9 @@ def fuck_weishao(stu_code, password):
     # 随机生成体温
     for i in range(6, 9):
         totalArr_data[i]['content'] = round(uniform(36.2, 36.9), 1)
-    answer_data['totalArr'] = totalArr_data
 
     # 生成 question_data
+    answer_data['totalArr'] = totalArr_data
     question_data = []
     for i in totalArr_data:
         if i['answered']:
@@ -102,7 +107,6 @@ def fuck_weishao(stu_code, password):
         return r.json()
 
 
-# TODO 把user_info和除体温信息外的数据，持久化到本地
 if __name__ == '__main__':
     try:
         with open('Data.json', mode='r', encoding='gbk') as Data_FILE:
@@ -114,7 +118,8 @@ if __name__ == '__main__':
     try:
         with open('userinfo.csv', mode='r', encoding='gbk') as fp:
             reader = csv.reader(fp)
-            all_user_info = {rows[0]: (rows[1], rows[2]) for rows in reader}
+            # 第一个元素做key，后面的做value，value[0]:名字，value[1]:密码，value[2]:地址（如果有地址就是未在校）
+            all_user_info = {rows[0]: tuple(rows[1:]) for rows in reader}
     except FileExistsError:
         print("userinfo.csv 数据文件不存在,请手动创建并按格式写入用户数据")
         exit(1)
@@ -123,6 +128,9 @@ if __name__ == '__main__':
             print(all_user_info[i][0], '已打卡')
         else:
             print(all_user_info[i][0], i, all_user_info[i][1], '打卡结果: ', end='')
-            print(fuck_weishao(i, all_user_info[i][1]))
+            if len(all_user_info[i]) == 2:  # 没有填写地址，提交数据按在校处理
+                print(fuck_weishao(i, all_user_info[i][1]))
+            else:  # 填写了地址，按未在校处理
+                print(fuck_weishao(i, all_user_info[i][1], all_user_info[i][2]))
     with open('Data.json', mode='w', encoding='gbk') as Data_FILE:
         Data_FILE.write(json.dumps(DATA, indent=2, ensure_ascii=False))
