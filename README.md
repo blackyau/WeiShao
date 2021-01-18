@@ -16,6 +16,8 @@ pip install -i https://opentuna.cn/pypi/web/simple requests
 
 csv 格式：
 
+> 请使用记事本、Notepad++ 或 Visual Studio Code 编辑 csv 格式文件，不要使用 Excel 进行编辑
+
 学号,姓名,密码
 
 ```csv
