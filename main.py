@@ -5,7 +5,7 @@ import config
 import config_out
 import json
 from random import uniform
-from sys import exit
+from sys import exit, argv
 
 
 def check(stu_code):
@@ -114,12 +114,18 @@ if __name__ == '__main__':
             if filestr != "":
                 DATA = json.loads(filestr)
     except FileNotFoundError:
-                DATA = {}  # 解决第一次运行时,如果这个变量没有被初始化,那么前面登录的代码就会出的问题
+        DATA = {}  # 解决第一次运行时,如果这个变量没有被初始化,那么前面登录的代码就会出的问题
     try:
-        with open('userinfo.csv', mode='r', encoding='gbk') as fp:
-            reader = csv.reader(fp)
-            # 第一个元素做key，后面的做value，value[0]:名字，value[1]:密码，value[2]:地址（如果有地址就是未在校）
-            all_user_info = {rows[0]: tuple(rows[1:]) for rows in reader}
+        if len(argv) < 2:  # 没有传入参数
+            with open('userinfo.csv', mode='r', encoding='gbk') as fp:
+                reader = csv.reader(fp)
+                # 第一个元素做key，后面的做value，value[0]:名字，value[1]:密码，value[2]:地址（如果有地址就是未在校）
+                all_user_info = {rows[0]: tuple(rows[1:]) for rows in reader}
+        else:  # 有传入参数
+            with open(argv[1], mode='r', encoding='gbk') as fp:
+                reader = csv.reader(fp)
+                # 第一个元素做key，后面的做value，value[0]:名字，value[1]:密码，value[2]:地址（如果有地址就是未在校）
+                all_user_info = {rows[0]: tuple(rows[1:]) for rows in reader}
     except FileExistsError:
         print("userinfo.csv 数据文件不存在,请手动创建并按格式写入用户数据")
         exit(1)
