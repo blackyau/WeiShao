@@ -66,6 +66,18 @@ csv 格式：
 python main.py userinfoall.csv
 ```
 
+运行时可使用 `-c` 参数让程序只检查打卡情况
+
+```
+python main.py -c
+```
+
+也可以同时使用
+
+```
+python main.py userinfoall.csv -c 
+```
+
 # License
 
 ```
