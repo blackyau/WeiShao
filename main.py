@@ -148,7 +148,7 @@ if __name__ == '__main__':
             if args.c:  # 只检查是否打卡
                 print('{0:\u3000<4s}{1:\u3000>3s}'.format(all_user_info[i][0], '未打卡'))
             else:  # 要进行补卡
-                print('{0:\u3000<4s}{1:\u3000<12s}{2:\u3000<16s}{3}'
+                print('{0:\u3000<4s}{1:\u3000<12s}{2:<16s}{3}'
                       .format(all_user_info[i][0], i, all_user_info[i][1], '打卡结果:'), end='')
                 if len(all_user_info[i]) == 2:  # 没有填写地址，提交数据按在校处理
                     print(fuck_weishao(i, all_user_info[i][1]))
