@@ -26,7 +26,10 @@ def check(stu_code):
     try:
         r = requests.get(url, params=payload, headers=headers, timeout=3)
         if r.ok:
-            sing_time = r.json()['data'][0]['createtime']  # 获取最近提交问卷的时间
+            get_list = r.json()['data']
+            if len(get_list) > 0:  # 最近 14 天没打卡
+                return False
+            sing_time = get_list[0]['createtime']  # 获取最近提交问卷的时间
             now_time = datetime.today().strftime('%Y-%m-%d')  # 获取当前时间
             if sing_time == now_time:
                 return True
