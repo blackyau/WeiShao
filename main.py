@@ -71,7 +71,7 @@ def fuck_weishao(stu_code, password, add=None):
         'Content-Type': 'application/json'}
     if stu_code is None or password is None:
         return False
-    if stu_code in DATA and add is None:  # 有缓存的数据，同时地址为空（也就是未在校）
+    if stu_code in DATA and add is None:  # 有缓存的数据，同时地址为空（也就是在校）
         try:
             r = requests.post('http://ncp.suse.edu.cn/api/questionnaire/questionnaire/addMyAnswer', headers=headers,
                               data=json.dumps(DATA[stu_code]), timeout=10)
@@ -122,7 +122,8 @@ def fuck_weishao(stu_code, password, add=None):
             print('打卡失败,错误信息如下:', r.text, end='')
             return None
         else:
-            DATA[stu_code] = answer_data
+            if add is None:  # 如果是在校的话,就把打卡请求持久化
+                DATA[stu_code] = answer_data
             return r.json()
     except requests.exceptions.RequestException as err:
         print("请求失败:", err)
